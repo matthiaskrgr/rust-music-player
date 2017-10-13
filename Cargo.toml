@@ -1,0 +1,14 @@
+[package]
+name = "rust-music-player"
+version = "0.1.0"
+authors = ["Matthias Krüger <matthias.krueger@famsik.de>"]
+
+[dependencies]
+#piston-music = "0.23.0"
+#clippy = {version = "*", optional = true}
+
+rodio = "0.5.2"
+clippy = "*"
+
+[features]
+default = []
