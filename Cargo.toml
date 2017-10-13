@@ -9,6 +9,7 @@ authors = ["Matthias Krüger <matthias.krueger@famsik.de>"]
 
 rodio = "0.5.2"
 clippy = "*"
+ncurses = "*"
 
 [features]
 default = []
