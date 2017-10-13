@@ -13,3 +13,7 @@ ncurses = "5.86.0"
 
 [features]
 default = []
+
+[profile.release]
+opt-level = 3
+lto = true
