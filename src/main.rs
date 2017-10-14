@@ -69,7 +69,7 @@ fn main() {
 
     // play audio
     println!("starting audio");
-    let endpoint = rodio::get_default_endpoint().unwrap();
+    let endpoint = rodio::get_default_endpoint().unwrap(); // use default_endpoint() once this works
     let sink = rodio::Sink::new(&endpoint);
 
     // add all our found files to the queue
