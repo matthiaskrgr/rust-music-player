@@ -1,5 +1,5 @@
- //#![cfg_attr(feature="clippy", feature(plugin))]
- //#![cfg_attr(feature="clippy", plugin(clippy))]
+//#![cfg_attr(feature="clippy", feature(plugin))]
+//#![cfg_attr(feature="clippy", plugin(clippy))]
 
 extern crate rodio; // https://github.com/tomaka/rodio/
 extern crate ncurses; // https://github.com/jeaye/ncurses-rs
@@ -39,7 +39,16 @@ fn main() {
     // invisible cursor
     curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
 
-    printw("Testing ncurses screen, e to exit");
+
+
+
+    printw("Testing ncurses screen, e to exit\n\n");
+
+    // display files in ncurses
+    for filename in &playable_files {
+        //let  songentry = &song.path();
+        addstr(&format!("Found file: {:?} \n", filename.path()));
+    }
 
     mvprintw(LINES() - 1, 0, "e to exit");
     refresh();
@@ -47,6 +56,7 @@ fn main() {
     let mut max_x = 0;
     let mut max_y = 0;
     getmaxyx(stdscr(), &mut max_y, &mut max_x);
+
 
 
     let mut ch = getch();
