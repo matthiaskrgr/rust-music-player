@@ -73,7 +73,7 @@ fn main() {
     let sink = rodio::Sink::new(&endpoint);
 
     // add all our found files to the queue
-    for filename in playable_files {
+    for filename in &playable_files {
         // @TODO this will probably blow up if we have a lot of large files
         let file = File::open(filename.path()).unwrap();
         let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
