@@ -125,6 +125,7 @@ fn main() {
 
 
     let mut i = 0 as i32;
+    let mut play = "";
     loop {
 
         let mut ch = getch();
@@ -147,12 +148,16 @@ fn main() {
             i += 1;
             highlightNth(i, &menus, w);
             wrefresh(w);
+        } else if ch == 'p' as i32 {// play
+            play = menus[i as usize];
+            endwin();
+            break;
         } else {
             // nope
         }
         wrefresh(w);
     }
-
+    println!("playing  {}", play);
 
 }
 
