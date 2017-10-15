@@ -133,12 +133,18 @@ fn main() {
             // terminate
             endwin();
             break;
-        } else if ch == 'w' as i32 { // KEY_DOWN
-            i -=1;
+        } else if ch == 'w' as i32 {
+            if i == 0 {
+                continue;
+            }
+            i -= 1;
             highlightNth(i, &menus, w);
             wrefresh(w);
-        } else if ch == 's' as i32 { // KEY_UP
-            i +=1;
+        } else if ch == 's' as i32 {
+            if i == (menus.len() - 1) as i32 {
+                continue;
+            }
+            i += 1;
             highlightNth(i, &menus, w);
             wrefresh(w);
         } else {
@@ -150,7 +156,7 @@ fn main() {
 
 }
 
-fn highlightNth(index: i32, textVec: &Vec<&str>, window:WINDOW) {
+fn highlightNth(index: i32, textVec: &Vec<&str>, window: WINDOW) {
     for i in 0..5 {
         if i == index {
             attr_on(A_STANDOUT() as u32);
