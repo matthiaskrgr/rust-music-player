@@ -4,12 +4,9 @@ version = "0.1.0"
 authors = ["Matthias Krüger <matthias.krueger@famsik.de>"]
 
 [dependencies]
-#piston-music = "0.23.0"
-#clippy = {version = "*", optional = true}
-
 rodio = "0.5.2"
-clippy = "*"
 ncurses = "5.86.0"
+clippy = "*"
 
 [features]
 default = []
