@@ -30,7 +30,7 @@ fn main() {
                 if filename.path().extension() == Some(OsStr::new("ogg")) {
                     //println!("Found file: {}", filename.path().display());
                     // collect filenames
-                    let path = format!("{:?}", filename.path());
+                    let path = filename.path().display().to_string();
                     let path_w_string = PathWithString {
                         dir_entry: filename,
                         path_string: path,
@@ -140,7 +140,9 @@ fn main() {
     let pathref = &pathrev.dir_entry;
     //let file = File::open( PathWithString[i as usize].path_string );
 
-    let file = File::open(path_string).unwrap();
+    println!("\n'{}'\n",  path_string);
+
+    let file = File::open(path_string).unwrap(); 
     let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
     sink.append(audio_source);
 
