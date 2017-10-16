@@ -61,7 +61,9 @@ fn main() {
     let w = newwin(window_x + 4, window_y + 5, 1, 0); // 25: get max song length
     box_(w, 0, 0);
 
-    printw("Rust Music Player. E to exit; P to add to playing queue; w, s to navigate");
+    printw(
+        "Rust Music Player. E to exit; P to add to playing queue; w, s to navigate",
+    );
 
     refresh();
 
