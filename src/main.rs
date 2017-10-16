@@ -58,7 +58,7 @@ fn main() {
 
 
     // pub fn newwin(lines: i32, cols: i32, y: i32, x: i32) -> WINDOW
-    let w = newwin(window_x + 4, window_y + 5, 1, 0); // 25: get max song length
+    let w = newwin(window_x + 4, window_y + 5, 1, 0);
     box_(w, 0, 0);
 
     printw(
@@ -104,7 +104,6 @@ fn main() {
             }
             index += 1;
             highlight_nth(index, &playable_files, w);
-
             wrefresh(w);
         } else if ch == 'p' as i32 {
             // add to playing queue
