@@ -92,13 +92,13 @@ fn main() {
         max_y
     ));
 
-     highlightNth(0, &playable_files, w);
-let mut i = 0 as i32;
-let mut play ="";
-loop {
+    highlightNth(0, &playable_files, w);
+    let mut i = 0 as i32;
+    let mut play = "";
+    loop {
 
-       let mut ch = getch();
-               //print!("{}\n", ch as i32);
+        let mut ch = getch();
+        //print!("{}\n", ch as i32);
         if ch == 'e' as i32 {
             // terminate
             endwin();
@@ -117,7 +117,8 @@ loop {
             i += 1;
             highlightNth(i, &playable_files, w);
             wrefresh(w);
-        } else if ch == 'p' as i32 {// play
+        } else if ch == 'p' as i32 {
+            // play
             play = &playable_files[i as usize].pathStr;
             endwin();
             break;
@@ -137,12 +138,12 @@ loop {
     let pathref = &pathrev.dirEntry;
     //let file = File::open( PathWithString[i as usize].pathStr );
 
-let file = File::open(pathstr).unwrap();
-let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
-sink.append(audio_source);
+    let file = File::open(pathstr).unwrap();
+    let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
+    sink.append(audio_source);
 
-sink.sleep_until_end(); // play everything in queu
-println!("done!");
+    sink.sleep_until_end(); // play everything in queu
+    println!("done!");
 
 } // main
 
