@@ -43,6 +43,7 @@ fn main() {
     initscr();
     raw();
     curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE); // invisible cursor
+    noecho(); // dont echo keys
 
     // new window
     let window_x = playable_files.len() as i32;
@@ -60,26 +61,26 @@ fn main() {
     let w = newwin(window_x + 4, window_y + 5, 1, 0); // 25: get max song length
     box_(w, 0, 0);
 
-    printw("Rust Music Player. E to exit.");
+    printw("Rust Music Player. E to exit; P to add to playing queue; w, s to navigate");
 
-    for file in &playable_files {
-        addstr(&format!("{}\n", file.path_string));
-    }
     refresh();
-    noecho(); // dont echo keys
 
-    let mut max_x = 0;
+    /* let mut max_x = 0;
     let mut max_y = 0;
     getmaxyx(stdscr(), &mut max_y, &mut max_x);
     addstr(&format!(
         "window resolutions: \t max_x: {}, max_y: {}",
         max_x,
         max_y
-    ));
+    )); */
 
     highlight_nth(0, &playable_files, w);
-    let mut i = 0 as i32;
-    let mut play = "";
+
+    // use default_endpoint() once this works
+    let endpoint = rodio::get_default_endpoint().unwrap();
+    let sink = rodio::Sink::new(&endpoint);
+
+    let mut index = 0 as i32;
     loop {
         let ch = getch();
         if ch == 'e' as i32 {
@@ -87,40 +88,33 @@ fn main() {
             endwin();
             break;
         } else if ch == 'w' as i32 {
-            if i == 0 {
+            if index == 0 {
                 continue;
             }
-            i -= 1;
-            highlight_nth(i, &playable_files, w);
+            index -= 1;
+            highlight_nth(index, &playable_files, w);
             wrefresh(w);
         } else if ch == 's' as i32 {
-            if i == (playable_files.len() - 1) as i32 {
+            if index == (playable_files.len() - 1) as i32 {
                 continue;
             }
-            i += 1;
-            highlight_nth(i, &playable_files, w);
+            index += 1;
+            highlight_nth(index, &playable_files, w);
 
             wrefresh(w);
         } else if ch == 'p' as i32 {
             // play
-            play = &playable_files[i as usize].path_string;
-        //endwin();
-        //break;
+            let filename = &playable_files[index as usize].path_string;
+            let file = File::open(filename).unwrap();
+            let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
+            sink.append(audio_source);
         } else {
             // nope
         }
         wrefresh(w);
-        let index = i;
-        // use default_endpoint() once this works
-        let endpoint = rodio::get_default_endpoint().unwrap();
-        let sink = rodio::Sink::new(&endpoint);
-
-        let filename = &playable_files[index as usize].path_string;
-        let file = File::open(filename).unwrap();
-        let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
-        sink.append(audio_source);
-        sink.sleep_until_end(); // play everything in queu
     }
+
+    sink.sleep_until_end(); // play everything that was queued
 
 } // main
 
