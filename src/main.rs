@@ -1,5 +1,5 @@
-//#![cfg_attr(feature="clippy", feature(plugin))]
-//#![cfg_attr(feature="clippy", plugin(clippy))]
+// #![cfg_attr(feature="clippy", feature(plugin))]
+// #![cfg_attr(feature="clippy", plugin(clippy))]
 
 extern crate rodio; // https://github.com/tomaka/rodio/
 extern crate ncurses; // https://github.com/jeaye/ncurses-rs
@@ -123,7 +123,7 @@ fn main() {
 } // main
 
 
-fn highlight_nth(index: i32, path_w_string_vec: &Vec<PathWithString>, window: WINDOW) {
+fn highlight_nth(index: i32, path_w_string_vec: &[PathWithString], window: WINDOW) {
     let maxlen = path_w_string_vec.len() as i32; // max list length
     for i in 0..maxlen {
         if i == index {
