@@ -90,6 +90,7 @@ fn main() {
             endwin();
             break;
         } else if ch == 'w' as i32 {
+            // move selection up
             if index == 0 {
                 continue;
             }
@@ -97,6 +98,7 @@ fn main() {
             highlight_nth(index, &playable_files, w);
             wrefresh(w);
         } else if ch == 's' as i32 {
+            // move selection down
             if index == (playable_files.len() - 1) as i32 {
                 continue;
             }
@@ -105,7 +107,7 @@ fn main() {
 
             wrefresh(w);
         } else if ch == 'p' as i32 {
-            // play
+            // add to playing queue
             let filename = &playable_files[index as usize].path_string;
             let file = File::open(filename).unwrap();
             let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
@@ -115,8 +117,8 @@ fn main() {
         }
         wrefresh(w);
     }
-
-    sink.sleep_until_end(); // play everything that was queued
+    // wait until everything is played
+    sink.sleep_until_end();
 
 } // main
 
