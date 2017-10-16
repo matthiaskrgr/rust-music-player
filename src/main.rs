@@ -8,15 +8,15 @@ extern crate ncurses; // https://github.com/jeaye/ncurses-rs
 use std::fs;
 use std::fs::File;
 use std::io::BufReader;
-use std::path::Path;
+//use std::path::Path;
 use std::ffi::OsStr;
-use std::{time, thread};
+//use std::{time, thread};
 use ncurses::*;
 
 
 struct PathWithString {
-    dirEntry: std::fs::DirEntry,
-    pathStr: String,
+    dir_entry: std::fs::DirEntry,
+    path_string: String,
 }
 
 fn main() {
@@ -31,20 +31,20 @@ fn main() {
                     //println!("Found file: {}", filename.path().display());
                     // collect filenames
                     let path = format!("{:?}", filename.path());
-                    let PwS = PathWithString {
-                        dirEntry: filename,
-                        pathStr: path,
+                    let path_w_string = PathWithString {
+                        dir_entry: filename,
+                        path_string: path,
                     };
-                    playable_files.push(PwS);
+                    playable_files.push(path_w_string);
 
                 } // is ogg?
             }
         } // for filename in files
     } // all files in cwd
 
-    for i in &playable_files {
-        println!("{}", i.pathStr);
-    }
+/*    for i in &playable_files {
+        println!("{}", i.path_string);
+    } */
 
     // init ncurses
     initscr();
@@ -56,7 +56,7 @@ fn main() {
     let w = newwin(10, 12, 1, 1);
     box_(w, 0, 0);
     let i = 0;
-    for file in &playable_files {
+/*    for file in &playable_files {
         // highlight
         if i == 3 {
             wattron(w, A_STANDOUT as u32);
@@ -67,12 +67,13 @@ fn main() {
         wrefresh(w);
     } // for
     wrefresh(w);
+    */
 
 
     printw("Testing ncurses screen, e to exit\n\n");
 
     for file in &playable_files {
-        addstr(&format!("{}\n", file.pathStr));
+        addstr(&format!("{}\n", file.path_string));
     }
 
     mvprintw(LINES() - 1, 0, "e to exit");
@@ -92,12 +93,12 @@ fn main() {
         max_y
     ));
 
-    highlightNth(0, &playable_files, w);
+    highlight_nth(0, &playable_files, w);
     let mut i = 0 as i32;
     let mut play = "";
     loop {
 
-        let mut ch = getch();
+        let  ch = getch();
         //print!("{}\n", ch as i32);
         if ch == 'e' as i32 {
             // terminate
@@ -108,18 +109,19 @@ fn main() {
                 continue;
             }
             i -= 1;
-            highlightNth(i, &playable_files, w);
+            highlight_nth(i, &playable_files, w);
             wrefresh(w);
         } else if ch == 's' as i32 {
             if i == (playable_files.len() - 1) as i32 {
                 continue;
             }
             i += 1;
-            highlightNth(i, &playable_files, w);
+            highlight_nth(i, &playable_files, w);
+
             wrefresh(w);
         } else if ch == 'p' as i32 {
             // play
-            play = &playable_files[i as usize].pathStr;
+            play = &playable_files[i as usize].path_string;
             endwin();
             break;
         } else {
@@ -133,12 +135,12 @@ fn main() {
     let endpoint = rodio::get_default_endpoint().unwrap(); // use default_endpoint() once this works
     let sink = rodio::Sink::new(&endpoint);
 
-    let pathrev = &playable_files[i as usize];
-    let pathstr = &pathrev.pathStr;
-    let pathref = &pathrev.dirEntry;
-    //let file = File::open( PathWithString[i as usize].pathStr );
+    let pathrev = &playable_files[index as usize];
+    let path_string = &pathrev.path_string;
+    let pathref = &pathrev.dir_entry;
+    //let file = File::open( PathWithString[i as usize].path_string );
 
-    let file = File::open(pathstr).unwrap();
+    let file = File::open(path_string).unwrap();
     let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
     sink.append(audio_source);
 
@@ -148,14 +150,14 @@ fn main() {
 } // main
 
 
-fn highlightNth(index: i32, pathWstringVec: &Vec<PathWithString>, window: WINDOW) {
+fn highlight_nth(index: i32, path_w_string_vec: &Vec<PathWithString>, window: WINDOW) {
     for i in 0..5 {
         if i == index {
             attr_on(A_STANDOUT() as u32);
         } else {
             attr_off(A_STANDOUT() as u32);
         }
-        let text = &pathWstringVec[i as usize].pathStr;
+        let text = &path_w_string_vec[i as usize].path_string;
         mvprintw((i as i32) + 1, 2, text);
     }
     wrefresh(window);
