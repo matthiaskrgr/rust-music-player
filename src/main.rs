@@ -25,7 +25,10 @@ fn main() {
             if let Ok(filename) = filename {
 
                 // filter playable files here
-                if filename.path().extension() == Some(OsStr::new("ogg")) {
+                if filename.path().extension() == Some(OsStr::new("ogg")) ||
+                    filename.path().extension() == Some(OsStr::new("flac")) ||
+                    filename.path().extension() == Some(OsStr::new("wav"))
+                {
                     // collect filenames
                     let path = filename.path().display().to_string();
                     let path_w_string = PathWithString {
