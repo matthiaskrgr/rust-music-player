@@ -86,7 +86,7 @@ fn main() {
     let sink = rodio::Sink::new(&endpoint);
 
     let mut index = 0 as i32;
-    loop {
+    loop { // input loop
         let ch = getch();
         if ch == 'e' as i32 {
             // terminate
@@ -114,13 +114,17 @@ fn main() {
             let file = File::open(filename).unwrap();
             let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
             sink.append(audio_source);
-        } else {
+            wrefresh(w);
+
+        } else { // unrecognized key
             // nope
         }
         wrefresh(w);
-    }
+
+        sink.sleep_until_end();
+
+    } // loop
     // wait until everything is played
-    sink.sleep_until_end();
 
 } // main
 
