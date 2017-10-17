@@ -19,13 +19,13 @@ fn main() {
     for entry in WalkDir::new(".") {
         let entry = entry.unwrap();
         let extension = entry.path().extension();
-        if extension == Some(OsStr::new("ogg")) ||
-           extension == Some(OsStr::new("flac")) ||
-           extension == Some(OsStr::new("wav")) {
-               let path = entry.path().display().to_string();
-              playable_files.push(path);
-        } // is handled exception?
-} // for entry in WalkDir::new(".")
+        if extension == Some(OsStr::new("ogg")) || extension == Some(OsStr::new("flac")) ||
+            extension == Some(OsStr::new("wav"))
+        {
+            let path = entry.path().display().to_string();
+            playable_files.push(path);
+        } // is handled extension
+    } // for entry in WalkDir::new(".")
 
     // init ncurses
     initscr();
@@ -71,7 +71,8 @@ fn main() {
     let sink = rodio::Sink::new(&endpoint);
 
     let mut index = 0 as i32;
-    loop { // input loop
+    loop {
+        // input loop
         let ch = getch();
         if ch == 'e' as i32 {
             // terminate
@@ -100,7 +101,8 @@ fn main() {
             let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
             sink.append(audio_source);
             wrefresh(w);
-        } else { // unrecognized key
+        } else {
+            // unrecognized key
             // nope
         }
         wrefresh(w);
