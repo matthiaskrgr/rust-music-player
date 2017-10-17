@@ -85,7 +85,6 @@ fn main() {
             }
             index -= 1;
             highlight_nth(index, &playable_files, w);
-            wrefresh(w);
         } else if ch == 's' as i32 {
             // move selection down
             if index == (playable_files.len() - 1) as i32 {
@@ -93,7 +92,6 @@ fn main() {
             }
             index += 1;
             highlight_nth(index, &playable_files, w);
-            wrefresh(w);
         } else if ch == 'p' as i32 {
             // add to playing queue
             let filename = &playable_files[index as usize];
