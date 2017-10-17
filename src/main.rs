@@ -3,44 +3,30 @@
 
 extern crate rodio; // https://github.com/tomaka/rodio/
 extern crate ncurses; // https://github.com/jeaye/ncurses-rs
-
+extern crate walkdir; // https://github.com/BurntSushi/walkdir
 
 use std::fs;
 use std::fs::File;
 use std::io::BufReader;
 use std::ffi::OsStr;
 use ncurses::*;
+use walkdir::WalkDir;
 
-struct PathWithString {
-    dir_entry: std::fs::DirEntry,
-    path_string: String,
-}
+
 
 fn main() {
-
     let mut playable_files = Vec::new();
-    // iterate over current directory
-    if let Ok(files) = fs::read_dir("./") {
-        for filename in files {
-            if let Ok(filename) = filename {
 
-                // filter playable files here
-                if filename.path().extension() == Some(OsStr::new("ogg")) ||
-                    filename.path().extension() == Some(OsStr::new("flac")) ||
-                    filename.path().extension() == Some(OsStr::new("wav"))
-                {
-                    // collect filenames
-                    let path = filename.path().display().to_string();
-                    let path_w_string = PathWithString {
-                        dir_entry: filename,
-                        path_string: path,
-                    };
-                    playable_files.push(path_w_string);
-
-                } // is ogg?
-            }
-        } // for filename in files
-    } // all files in cwd
+    for entry in WalkDir::new(".") {
+        let entry = entry.unwrap();
+        let extension = entry.path().extension();
+        if extension == Some(OsStr::new("ogg")) ||
+           extension == Some(OsStr::new("flac")) ||
+           extension == Some(OsStr::new("wav")) {
+               let path = entry.path().display().to_string();
+              playable_files.push(path);
+        } // is handled exception?
+} // for entry in WalkDir::new(".")
 
     // init ncurses
     initscr();
@@ -53,7 +39,7 @@ fn main() {
     let mut window_y = 0;
     // find out longest song name
     for songname in &playable_files {
-        let length = songname.path_string.len() as i32;
+        let length = songname.len() as i32;
         if length > window_y {
             window_y = length;
         }
@@ -110,12 +96,11 @@ fn main() {
             wrefresh(w);
         } else if ch == 'p' as i32 {
             // add to playing queue
-            let filename = &playable_files[index as usize].path_string;
+            let filename = &playable_files[index as usize];
             let file = File::open(filename).unwrap();
             let audio_source = rodio::Decoder::new(BufReader::new(file)).unwrap();
             sink.append(audio_source);
             wrefresh(w);
-
         } else { // unrecognized key
             // nope
         }
@@ -129,7 +114,7 @@ fn main() {
 } // main
 
 
-fn highlight_nth(index: i32, path_w_string_vec: &[PathWithString], window: WINDOW) {
+fn highlight_nth(index: i32, path_w_string_vec: &[String], window: WINDOW) {
     let maxlen = path_w_string_vec.len() as i32; // max list length
     for i in 0..maxlen {
         if i == index {
@@ -137,7 +122,7 @@ fn highlight_nth(index: i32, path_w_string_vec: &[PathWithString], window: WINDO
         } else {
             attr_off(A_STANDOUT() as u32);
         }
-        let text = &path_w_string_vec[i as usize].path_string;
+        let text = &path_w_string_vec[i as usize];
         mvprintw((i as i32) + 2, 3, text);
     }
     wrefresh(window);
