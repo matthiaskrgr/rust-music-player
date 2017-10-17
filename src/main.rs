@@ -5,7 +5,6 @@ extern crate rodio; // https://github.com/tomaka/rodio/
 extern crate ncurses; // https://github.com/jeaye/ncurses-rs
 extern crate walkdir; // https://github.com/BurntSushi/walkdir
 
-use std::fs;
 use std::fs::File;
 use std::io::BufReader;
 use std::ffi::OsStr;
